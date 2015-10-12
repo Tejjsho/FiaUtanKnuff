@@ -1,11 +1,13 @@
 from graphics import *
+import math
 
 W = GraphWin ("Fia Utan Knuff", 800,800)
 PathList = []
 
 def main():
     W.setBackground("Black")
-    
+
+    smallCircle = Circle(Point(0,0),25)
     cr = Lcircle(150, 150, 60, "red")
 
     c1 = Lcircle(150, 300, 25, "red")
@@ -74,15 +76,16 @@ def main():
     green = player("green",0,greenpathlist)
     blue = player("blue",0,bluepathlist)
     yellow = player("yellow",0,yellowpathlist)
-    while True:
-        if W.getMouse():
-            red.nextPosition()
-            green.nextPosition()
-            blue.nextPosition()
-            yellow.nextPosition()
-        else:
-            print None
+
+
     
+    while True:
+         p=W.getMouse()
+         red.checkClick(p)
+         green.checkClick(p)
+         blue.checkClick(p)
+         yellow.checkClick(p)
+
 
 class Lcircle(object):
     def __init__(self, x, y, rad, color):
@@ -107,27 +110,56 @@ class player(object):
         self.pathlist = pathlist
         self.mp = self.pathlist[self.index].mp
         a = Circle(self.mp,10)
+#change a to understandable variable.
         self.a = a
         a.setFill(color) 
         a.draw(W)
+        self.color = color
         
     def nextPosition(self):
         print "Here is Pathlist object", self.pathlist[self.index].a
         p1 = self.pathlist[self.index].a.getCenter()
         x1 = p1.getX()
         y1 = p1.getY()
-        self.index = self.index + 1
+        self.index = self.index
+        if self.pathlist[self.index] != self.pathlist[-1]:
+            self.index = self.index + 1
+        else:
+            main()
+            
         p2 = self.pathlist[self.index].a.getCenter()
         x2 = p2.getX()
         y2 = p2.getY()
-
         dx = (x2-x1)
         dy = (y2-y1)
         
         self.a.move(dx,dy)
+        
+    def checkClick(self,p):
+        if inCircle(p,self.a):
+            self.nextPosition()
+
+  #  def knuff(self,
+  #     if checkClick
+
+def inCircle(p, smallCircle):    
+    ra=smallCircle.getRadius()
+    cp=smallCircle.getCenter()
+    cx = cp.getX()
+    cy = cp.getY()
+    x = p.getX()
+    y = p.getY()
+    d = math.sqrt((cx - x)**2 +(cy - y)**2)
+    if d > ra:
+        return False
+    else:
+        return True
+        print "circle!"
 
 
 
+        
+    
     
 
 main()
