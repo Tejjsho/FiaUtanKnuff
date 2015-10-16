@@ -4,6 +4,16 @@ import math
 W = GraphWin ("Fia Utan Knuff", 800,800)
 PathList = []
 
+def checkBump(moved, c1, c2, c3):
+    if inCircle(moved.getP2(), c1.getplayercircle()):
+        c1.backtobase()
+    elif inCircle(moved.getP2(), c2.getplayercircle()):
+        c2.backtobase()
+    elif inCircle(moved.getP2(), c3.getplayercircle()):
+        c3.backtobase()
+    else:
+        return None
+   
 def main():
     W.setBackground("Black")
 
@@ -80,11 +90,17 @@ def main():
 
     
     while True:
-         p=W.getMouse()
-         red.checkClick(p)
-         green.checkClick(p)
-         blue.checkClick(p)
-         yellow.checkClick(p)
+        p=W.getMouse()
+        
+        red.checkClick(p)
+        checkBump(red, green, blue, yellow)
+        green.checkClick(p)
+        checkBump(green, red, blue, yellow)
+        blue.checkClick(p)
+        checkBump(blue, green, red, yellow)
+        yellow.checkClick(p)
+        checkBump(yellow, green, blue, red)
+        
 
 
 class Lcircle(object):
@@ -115,6 +131,25 @@ class player(object):
         a.setFill(color) 
         a.draw(W)
         self.color = color
+
+    def getP2(self):
+        return self.a.getCenter()
+
+    def getplayercircle(self):
+        return self.a
+    def backtobase(self):
+        self.index = 0
+        p1 = self.a.getCenter()
+        x1 = p1.getX()
+        y1 = p1.getY()
+
+        p2 = self.pathlist[self.index].a.getCenter()
+        x2 = p2.getX()
+        y2 = p2.getY()
+        dx = (x2-x1)
+        dy = (y2-y1)
+        self.a.move(dx, dy)
+        
         
     def nextPosition(self):
         print "Here is Pathlist object", self.pathlist[self.index].a
@@ -138,9 +173,14 @@ class player(object):
     def checkClick(self,p):
         if inCircle(p,self.a):
             self.nextPosition()
+            return True
+        else:
+            return False
+        
 
-  #  def knuff(self,
-  #     if checkClick
+def bump():
+    if yellow.pathlist[index + 1] == red.pathlist[index]:
+        red.pathlist[index] = red.pathlist[0]
 
 def inCircle(p, smallCircle):    
     ra=smallCircle.getRadius()
