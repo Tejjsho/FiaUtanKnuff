@@ -1,164 +1,301 @@
 from graphics import *
+import math
+import random
 
+W = GraphWin ("Fia Utan Knuff", 800,800)
+PathList = []
 
-def main():
-
-    W = GraphWin ("Fia Utan Knuff", 800,800)
-    global W
-    W.setBackground("Black")
+def checkBump(moved, c1, c2, c3):
+    if inCircle(moved.getP2(), c1.getplayercircle()):
+        c1.backtobase()
+    elif inCircle(moved.getP2(), c2.getplayercircle()):
+        c2.backtobase()
+    elif inCircle(moved.getP2(), c3.getplayercircle()):
+        c3.backtobase()
+    else:
+        return None
    
-    PathList = []
-    global PathList
-    
-#    a = Circle(Point(100,100),10)
-#    a.setFill("white")
-#    a.draw(W)
-
-
-    
-    cr = Lcircle(150, 150, 60, "red")
+def main():
+    W.setBackground("Black")
+    smallCircle = Circle(Point(0, 0), 25)
+     
+    'red base'
     global cr
-    print cr.mp.getX(), cr.mp.getY()
-
-    c1 = Lcircle(150, 300, 25, "red")
-    global c1
+    cr = Lcircle(150, 150, 60, "red")
+    'reds path (8 steps + 3 final steps)'
+    c1 = Lcircle(150, 300, 25, "white")
     c2 = Lcircle(200, 300, 25, "white")
-    global c2  
     c3 = Lcircle(250, 300, 25, "white")
-    global c3
     c4 = Lcircle(300, 300, 25, "white")
-    global c4
     c5 = Lcircle(300, 250, 25, "white")
-    global c5
     c6 = Lcircle(300, 200, 25, "white")
-    global c6
     c7 = Lcircle(300, 150, 25, "white")
-    global c7
     c8 = Lcircle(350, 150, 25, "white")
-    global c8
+
+    r1 = Lcircle(200, 350, 25, "red")
+    r2 = Lcircle(250, 350, 25, "red")
+    r3 = Lcircle(300, 350, 25, "red")
     
-    cg = Lcircle(550, 150, 60, "green")
+    'green base'
     global cg
-
-    c9 = Lcircle(400, 150, 25, "green")
-    global c9
+    cg = Lcircle(550, 150, 60, "green")
+    'green path (8 steps + 3 final steps)'
+    c9 = Lcircle(400, 150, 25, "white")
     c10 = Lcircle(400, 200, 25, "white")
-    global c10
     c11 = Lcircle(400, 250, 25, "white")
-    global c11
     c12 = Lcircle(400, 300, 25, "white")
-    global c12
     c13 = Lcircle(450, 300, 25, "white")
-    global c13
     c14 = Lcircle(500, 300, 25, "white")
-    global c14
     c15 = Lcircle(550, 300, 25, "white")
-    global c15
     c16 = Lcircle(550, 350, 25, "white")
-    global c16
 
-    cb = Lcircle(550, 550, 60, "blue")
+    g1 = Lcircle(350, 200, 25, "green") 
+    g2 = Lcircle(350, 250, 25, "green")
+    g3 = Lcircle(350, 300, 25, "green")
+
+    'blue base'
     global cb
-
-    c17 = Lcircle(550, 400, 25, "blue")
-    global c17
+    cb = Lcircle(550, 550, 60, "blue")
+    'blue path (8 steps + 3 final steps)'
+    c17 = Lcircle(550, 400, 25, "white")
     c18 = Lcircle(500, 400, 25, "white")
-    global c18
     c19 = Lcircle(450, 400, 25, "white")
-    global c19
     c20 = Lcircle(400, 400, 25, "white")
-    global c20
     c21 = Lcircle(400, 450, 25, "white")
-    global c21
     c22 = Lcircle(400, 500, 25, "white")
-    global c22
     c23 = Lcircle(400, 550, 25, "white")
-    global c23
     c24 = Lcircle(350, 550, 25, "white")
-    global c24
 
-    cy = Lcircle(150, 550, 60, "yellow")
+    b1 = Lcircle(500, 350, 25, "blue")
+    b2 = Lcircle(450, 350, 25, "blue")
+    b3 = Lcircle(400, 350, 25, "blue")
+
+    'yellow base'
     global cy
-
-    c25 = Lcircle(300, 550, 25, "yellow")
-    global c25
+    cy = Lcircle(150, 550, 60, "yellow")
+    'yellow path (8 steps + 3 final steps)'
+    c25 = Lcircle(300, 550, 25, "white")
     c26 = Lcircle(300, 500, 25, "white")
-    global c26
     c27 = Lcircle(300, 450, 25, "white")
-    global c27
     c28 = Lcircle(300, 400, 25, "white")
-    global c28
     c29 = Lcircle(250, 400, 25, "white")
-    global c29
     c30 = Lcircle(200, 400, 25, "white")
-    global c30
     c31 = Lcircle(150, 400, 25, "white")
-    global c31
     c32 = Lcircle(150, 350, 25, "white")
-    global c32
     
+    y1 = Lcircle(350, 500, 25, "yellow")
+    y2 = Lcircle(350, 450, 25, "yellow")
+    y3 = Lcircle(350, 400, 25, "yellow")
 
+
+    goal = Lcircle(350, 350, 25, "black")
+    
+    
+    'full player paths'
+    redpathlist = [cr,c1,c2,c3,c4,c5,c6,c7,c8,c9,
+                   c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,
+                   c20,c21,c22,c23,c24,c25,c26,c27,c28,c29,
+                   c30,c31,c32,r1,r2,r3,goal]
+    greenpathlist = [cg,c9,c10,c11,c12,c13,c14,c15,c16,c17,
+                     c18,c19,c20,c21,c22,c23,c24,c25,c26,c27,
+                     c28,c29,c30,c31,c32,c1,c2,c3,c4,c5,
+                     c6,c7,c8,g1,g2,g3,goal]
+    bluepathlist = [cb,c17,c18,c19,c20,c21,c22,c23,c24,c25,
+                     c26,c27,c28,c29,c30,c31,c32,c1,c2,c3,
+                     c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,
+                     c14,c15,c16,b1,b2,b3,goal]
+    yellowpathlist = [cy,c25,
+                     c26,c27,c28,c29,c30,c31,c32,c1,c2,c3,
+                     c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,
+                     c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,
+                     c24,y1,y2,y3,goal]
+    
+    global red
+    red = player("red", 0, redpathlist)
+    global green
+    green = player("green", 0, greenpathlist)
+    global blue
+    blue = player("blue", 0, bluepathlist)
+    global yellow
+    yellow = player("yellow", 0, yellowpathlist)
   
-#    print PathList[0].mp.getX()
-    #c1a.a.draw(W)
-    red = player("red",0)
-
     while True:
-        if W.getMouse():
-            red.nextPosition()
-        else:
-            print None
-    
-    
+        p=W.getMouse()
+
+        cr.checkBaseClick(p)
+        
+        red.checkClick(p)
+        checkBump(red, green, blue, yellow)
+        
+        green.checkClick(p)
+        checkBump(green, red, blue, yellow)
+        
+        blue.checkClick(p)
+        checkBump(blue, green, red, yellow)
+        
+        yellow.checkClick(p)
+        checkBump(yellow, green, blue, red)
+
 class Lcircle(object):
-    def __init__(self, x, y, rad, color):
-        self.mp = Point(x,y)
-        self.rad = rad
+    def __init__(self, x, y, radius, color):
+        self.centerpoint = Point(x, y)
+        self.radius = radius
         self.color = color
-        a = Circle(self.mp,self.rad)
-        self.a = a
-        a.setFill(color)
-        a.draw(W)
+        circle = Circle(self.centerpoint,self.radius)
+        self.circle = circle
+        circle.setFill(color)
+        circle.draw(W)
         PathList.append(self)
-        
 
-class ccirkel(object):
-    def __init__(self, x, y):
-        Circle(Point(400,400),10)
-    
+    def checkBaseClick(self, p):
+        if inCircle(p, cr.circle):
+            if not inCircle(red.circle.getCenter(),cr.circle):
+                print "You have moved red player by clicking on red base."
+                red.nextPosition()
+                return True
+            elif not inCircle(p, red.circle):
+                print "You have moved red player by clicking on red base."
+                red.nextPosition()
+                return True
 
+        elif inCircle(p, cg.circle):
+            if not inCircle(green.circle.getCenter(), cg.circle):
+                print "You have moved green player by clicking on green base."
+                green.nextPosition()
+                return True
+            elif not inCircle(p, green.circle):
+                print "You have moved green player by clicking on green base."
+                green.nextPosition()
+                return True
+            
+        elif inCircle(p, cb.circle):
+            if not inCircle(green.circle.getCenter(), cb.circle):
+                print "You have moved blue player by clicking on blue base."
+                blue.nextPosition()
+                return True
+            elif not inCircle(p, blue.circle):
+                print "You have moved blue player by clicking on blue base."
+                blue.nextPosition()
+                return True
+            
+        elif inCircle(p, cy.circle):
+            if not inCircle(yellow.circle.getCenter(), cy.circle):
+                print "You have moved yellow player by clicking on yellow base."
+                yellow.nextPosition()
+                return True
+            elif not inCircle(p, yellow.circle):
+                print "You have moved yellow player by clicking on yellow base."
+                yellow.nextPosition()
+                return True
+        else:
+            return False
+  
 class player(object):
-    def __init__(self, color, index):
-        #self.mp = Point(c13a.mp.getX(), c13a.mp.getY())
+    def __init__(self, color, index, pathlist):
         self.index = index
-        self.mp = PathList[self.index].mp
-        a = Circle(self.mp,10)
-        self.a = a
-        a.setFill(color)
-        #if color == "red":
-            #self.mp = c1a.mp 
-        a.draw(W)
-        
-    def nextPosition(self):
-        print "Here is Pathlist object", PathList[self.index].a
-        p1 = PathList[self.index].a.getCenter()
+        self.pathlist = pathlist
+        self.centerpoint = self.pathlist[self.index].centerpoint
+        circle = Circle(self.centerpoint, 10)
+        self.circle = circle
+        circle.setFill(color) 
+        circle.draw(W)
+        self.color = color
+             
+    def getP2(self):
+        return self.circle.getCenter()
+
+    def getplayercircle(self):
+        return self.circle
+    
+    def backtobase(self):
+        self.index = 0
+        p1 = self.circle.getCenter()
         x1 = p1.getX()
         y1 = p1.getY()
-        self.index = self.index + 1
-        p2 = PathList[self.index].a.getCenter()
+
+        p2 = self.pathlist[self.index].circle.getCenter()
         x2 = p2.getX()
         y2 = p2.getY()
-
+        
         dx = (x2-x1)
         dy = (y2-y1)
+        self.circle.move(dx, dy)
         
-        self.a.move(dx,dy)
+    def nextPosition(self):
+        p1 = self.pathlist[self.index].circle.getCenter()
+        x1 = p1.getX()
+        y1 = p1.getY()
+        self.index = self.index
+        tempdicevalue = 0
+        
+        if self.pathlist[self.index] != self.pathlist[-1]:
+            tempdicevalue = dice(1, 6)
+            
+            if self.pathlist[self.index] == self.pathlist[-2]:
+                tempdicevalue = dice(1, 1)
+            elif self.pathlist[self.index] == self.pathlist[-3]:
+                tempdicevalue = dice(1, 2)
+            elif self.pathlist[self.index] == self.pathlist[-4]:
+                tempdicevalue = dice(1, 3)
+            elif self.pathlist[self.index] == self.pathlist[-5]:
+                tempdicevalue = dice(0, 4)
+            elif self.pathlist[self.index] == self.pathlist[-6]:
+                tempdicevalue = dice(0, 5)
 
+            print self.color,"player rolled >>", tempdicevalue, "<< and was moved to"
+            print "X:", str(x1), ",", "Y:", str(y1)
+            self.index = self.index + tempdicevalue
+            tempx2 = self.pathlist[self.index].circle.getCenter().getX()
+            tempy2 = self.pathlist[self.index].circle.getCenter().getY()
+            print "from"
+            print "X:", str(tempx2), ", Y:", str(tempy2)
+            print "------------------------------------"            
+        else:
+            print "------------------------------------"
+            print "------------------------------------"
+            print "A player has won!"
+            print "Game has been reset."
+            print "------------------------------------"
+            print "------------------------------------"
+            main()
+            
+        p2 = self.pathlist[self.index].circle.getCenter()
+        x2 = p2.getX()
+        y2 = p2.getY()
+        dx = (x2-x1)
+        dy = (y2-y1)
+        self.circle.move(dx, dy)
+        
+    def checkClick(self, p):
+        if inCircle(p, self.circle):
+            self.nextPosition()
+            return True
+        else:
+            return False
 
+def bump():
+    if yellow.pathlist[index + 1] == red.pathlist[index]:
+        red.pathlist[index] = red.pathlist[0]
 
-    
+def inCircle(p, smallCircle):    
+    radius=smallCircle.getRadius()
+    centerpoint=smallCircle.getCenter()
+    cx = centerpoint.getX()
+    cy = centerpoint.getY()
+    x = p.getX()
+    y = p.getY()
+    distance = math.sqrt((cx - x)**2 +(cy - y)**2)
+    if distance > radius:
+        return False
+    else:
+        return True
+
+def dice(From, sides):
+    r = random.randint(From, sides)
+    return r
 
 main()
+
 
 
 #http://www.cs.swarthmore.edu/~newhall/cs21/pythondocs/using-graphics.html
