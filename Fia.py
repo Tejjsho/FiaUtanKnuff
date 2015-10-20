@@ -19,9 +19,16 @@ def main():
     W.setBackground("Black")
 
     smallCircle = Circle(Point(0,0),25)
-
+    
+    global initiatingcircle
+    initiatingcircle = Lcircle(0,0,1,"black")
+    
+    
+    
     'reds base'
+    global cr
     cr = Lcircle(150, 150, 60, "red")
+    
 
     'reds path (8 steps)'
     c1 = Lcircle(150, 300, 25, "white")
@@ -34,8 +41,10 @@ def main():
     c8 = Lcircle(350, 150, 25, "white")
 
     'green base'
+    global cg
     cg = Lcircle(550, 150, 60, "green")
-
+    
+    
     'green path (8 steps)'
     c9 = Lcircle(400, 150, 25, "white")
     c10 = Lcircle(400, 200, 25, "white")
@@ -47,8 +56,10 @@ def main():
     c16 = Lcircle(550, 350, 25, "white")
 
     'blue base'
+    global cb
     cb = Lcircle(550, 550, 60, "blue")
-
+   
+    
     'blue path (8 steps)'
     c17 = Lcircle(550, 400, 25, "white")
     c18 = Lcircle(500, 400, 25, "white")
@@ -60,7 +71,9 @@ def main():
     c24 = Lcircle(350, 550, 25, "white")
 
     'yellow base'
+    global cy
     cy = Lcircle(150, 550, 60, "yellow")
+    
     
     'yellow path (8 steps)'
     c25 = Lcircle(300, 550, 25, "white")
@@ -110,21 +123,24 @@ def main():
                      c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,
                      c24,y1,y2,y3,goal]
     
-    
+    global red
     red = player("red",0,redpathlist)
+    global green
     green = player("green",0,greenpathlist)
+    global blue
     blue = player("blue",0,bluepathlist)
+    global yellow
     yellow = player("yellow",0,yellowpathlist)
+  
 
 
     
     while True:
         p=W.getMouse()
 
-        'cr.checkBaseClick(p)'
+        
         
         red.checkClick(p)
-        cr.checkBaseClick(p)
         checkBump(red, green, blue, yellow)
         green.checkClick(p)
         checkBump(green, red, blue, yellow)
@@ -132,6 +148,8 @@ def main():
         checkBump(blue, green, red, yellow)
         yellow.checkClick(p)
         checkBump(yellow, green, blue, red)
+
+        cr.checkBaseClick(p)
         
 
 
@@ -147,15 +165,90 @@ class Lcircle(object):
         PathList.append(self)
 
     def checkBaseClick(self,p):
-        if inCircle(p,self.circle):
-            print "You've clicked in the red base."
+        if inCircle(p,cr.circle):
+            print "You've clicked inside the red base."
+            red.nextPosition()
+            return True
+
+        elif inCircle(p,cg.circle):
+            print "You've clicked inside the green base."
+            green.nextPosition()
+            return True
+        elif inCircle(p,cb.circle):
+            print "You've clicked inside the blue base."
+            blue.nextPosition()
+            return True
+        elif inCircle(p,cy.circle):
+            print "You've clicked inside the yellow base."
+            yellow.nextPosition()
             return True
         else:
             return False
-    
-class ccirkel(object):
-    def __init__(self, x, y):
-        Circle(Point(400,400),10)
+
+
+
+#            '''if inCircle(red.circle.getCenter(),cr.circle):
+#                if 1 == 1:
+#                    print "Player red is inside red base"
+#                    print "Player red is inside red base"
+#                    print "Player red is inside red base"
+#
+#                elif inCircle(p,cr.circle) and inCircle(p, red.circle):
+#                    print "TEEEEEEEEEEST"
+#                    
+#
+#
+#                else:
+#                    print "Only in base!!"
+#                    red.nextPosition()
+#            else:
+#                if inCircle(p, cr.circle) and inCircle(red.circle.getCenter(),red.circle)==False:
+#                    print "Only in base, player is outside"
+#                    red.nextPosition()
+#                    return True
+#                else:
+#                    print "NoOOpe!"
+#                    red.nextPosition()'''
+#    
+#           '''if inCircle(p,cr.circle):
+#                  if  inCircle(red.circle.getCenter(),cr.circle):
+#                      if inCircle(p, red.circle):
+#                          print "Clicked inside player AND red base"
+#                          print "Clicked inside player AND red base"
+#                          print "Clicked inside player AND red base"
+#                      else:
+#                          print "incircle"
+#                          red.nextPosition()
+#                  else:
+#                      if inCircle(p, cr.circle):
+#                          red.nextPosition()
+#                       
+#                          return True'''
+#
+#
+#            '''elif inCircle(p,cr.circle):
+#                print "You've clicked inside the red base."
+#                red.nextPosition()
+#                return True'''
+            
+
+        
+#    def whatBase(self, p):
+#        if inCircle(p, cr.circle):
+#            #red.circle.getCenter()
+#            return cr.circle
+#        elif inCircle(p,cg.circle):
+#            return "green"
+#        elif inCircle(p,cb.circle):
+#            return "blue"
+#        elif inCircle(p,cy.circle):
+#            return "yellow"
+#        else:
+#            None
+        
+#class ccirkel(object):
+#    def __init__(self, x, y):
+#        Circle(Point(400,400),10)
     
 
 class player(object):
@@ -212,18 +305,23 @@ class player(object):
             elif self.pathlist[self.index] == self.pathlist[-6]:
                 tempdicevalue = dice(0,5)
 
-            print "Player rolled:", tempdicevalue, "and was moved to"
+            print self.color,"player rolled:", tempdicevalue, "and was moved to"
             print "X:", str(x1), ",", "Y:", str(y1)
             
             self.index = self.index + tempdicevalue
             tempx2 = self.pathlist[self.index].circle.getCenter().getX()
             tempy2 = self.pathlist[self.index].circle.getCenter().getY()
            
-            print "From"
+            print "        from"
             print "X:", str(tempx2), ", Y:", str(tempy2)
             print "------------------------------------"
             
         else:
+            print "------------------------------------"
+            print "------------------------------------"
+            print "A player has won!"
+            print "------------------------------------"
+            print "------------------------------------"
             main()
             
         p2 = self.pathlist[self.index].circle.getCenter()
